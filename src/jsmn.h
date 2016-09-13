@@ -10,49 +10,49 @@
 
 /**
  * JSON type identifier. Basic types are:
- * 	o Object
- * 	o Array
- * 	o String
- * 	o Other primitive: number, boolean (true/false) or null
+ *  o Object
+ *  o Array
+ *  o String
+ *  o Other primitive: number, boolean (true/false) or null
  */
 typedef enum {
-	JSMN_PRIMITIVE = 0,
-	JSMN_OBJECT = 1,
-	JSMN_ARRAY = 2,
-	JSMN_STRING = 3
+    JSMN_PRIMITIVE = 0,
+    JSMN_OBJECT = 1,
+    JSMN_ARRAY = 2,
+    JSMN_STRING = 3
 } jsmntype_t;
 
 typedef enum {
-	/* Not enough tokens were provided */
-	JSMN_ERROR_NOMEM = -1,
-	/* Invalid character inside JSON string */
-	JSMN_ERROR_INVAL = -2,
-	/* The string is not a full JSON packet, more bytes expected */
-	JSMN_ERROR_PART = -3,
-	/* Everything was fine */
-	JSMN_SUCCESS = 0
+    /* Not enough tokens were provided */
+    JSMN_ERROR_NOMEM = -1,
+    /* Invalid character inside JSON string */
+    JSMN_ERROR_INVAL = -2,
+    /* The string is not a full JSON packet, more bytes expected */
+    JSMN_ERROR_PART = -3,
+    /* Everything was fine */
+    JSMN_SUCCESS = 0
 } jsmnerr_t;
 
 /**
  * JSON token description.
- * @param		type	type (object, array, string etc.)
- * @param		start	start position in JSON data string
- * @param		end		end position in JSON data string
+ * @param       type    type (object, array, string etc.)
+ * @param       start   start position in JSON data string
+ * @param       end     end position in JSON data string
  */
 typedef struct {
-	jsmntype_t type;
-	int start;
-	int end;
-	int size;
+    jsmntype_t type;
+    int start;
+    int end;
+    int size;
 #ifdef JSMN_PARENT_LINKS
-	int parent;
+    int parent;
 #ifdef JSMN_POSITION_INSIDE_PARENT
-	int posinparent;
+    int posinparent;
 #endif
 #endif
 #ifdef JSMN_DISABLED_ITEMS
-	bool enabled;
-	bool _in_comment;
+    bool enabled;
+    bool _in_comment;
 #endif
 } jsmntok_t;
 
@@ -61,9 +61,9 @@ typedef struct {
  * the string being parsed now and current position in that string
  */
 typedef struct {
-	unsigned int pos; /* offset in the JSON string */
-	int toknext; /* next token to allocate */
-	int toksuper; /* superior token node, e.g parent object or array */
+    unsigned int pos; /* offset in the JSON string */
+    int toknext; /* next token to allocate */
+    int toksuper; /* superior token node, e.g parent object or array */
 } jsmn_parser;
 
 /**

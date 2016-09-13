@@ -63,7 +63,28 @@ static jsmnerr_t jsmn_parse_primitive(jsmn_parser *parser,
 #endif
             case '\t' : case '\r' : case '\n' : case ' ' :
             case ','  : case ']'  : case '}' :
-            case 0xa0 /* non breaking-space */ :
+            case 0x0b:
+            case 0x0c:
+            case 0x85:
+            case 0xa0:
+            case 0x1680:
+            case 0x2000:
+            case 0x2001:
+            case 0x2002:
+            case 0x2003:
+            case 0x2004:
+            case 0x2005:
+            case 0x2006:
+            case 0x2007:
+            case 0x2008:
+            case 0x2009:
+            case 0x200a:
+            case 0x200b:
+            case 0x2028:
+            case 0x2029:
+            case 0x202f:
+            case 0x205f:
+            case 0x3000:
 #ifdef JSMN_DISABLED_ITEMS
             case '/' : case '*' :
 #endif
@@ -256,7 +277,28 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, CFStringInlineBuffer* buf,
                     tokens[parser->toksuper].size++;
                 break;
             case '\t' : case '\r' : case '\n' : case ':' : case ',': case ' ':
-            case 0xa0 /* non breaking-space */ :
+            case 0x0b:
+            case 0x0c:
+            case 0x85:
+            case 0xa0:
+            case 0x1680:
+            case 0x2000:
+            case 0x2001:
+            case 0x2002:
+            case 0x2003:
+            case 0x2004:
+            case 0x2005:
+            case 0x2006:
+            case 0x2007:
+            case 0x2008:
+            case 0x2009:
+            case 0x200a:
+            case 0x200b:
+            case 0x2028:
+            case 0x2029:
+            case 0x202f:
+            case 0x205f:
+            case 0x3000:
                 break;
 #ifdef JSMN_DISABLED_ITEMS
             case '/':

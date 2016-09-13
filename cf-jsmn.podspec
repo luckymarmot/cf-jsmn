@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "cf-jsmn"
-  s.version          = "0.1.0"
+  s.version          = "0.2.0"
   s.summary          = "CF (OS X and iOS) version of jsmn"
   s.description      = <<-DESC
     A Core Foundation compatible version of the awesome lightweight JSON parser

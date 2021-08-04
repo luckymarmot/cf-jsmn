@@ -128,7 +128,7 @@ found:
  */
 static jsmnerr_t jsmn_parse_string(jsmn_parser *parser,
                                    CFStringInlineBuffer* buf, jsmntok_t *tokens,
-                                   size_t num_tokens, CFIndex len,
+                                   size_t num_tokens, CFIndex len, jsmntype_t type,
 #ifdef JSMN_DISABLED_ITEMS
     bool enabled
 #endif
@@ -150,7 +150,7 @@ static jsmnerr_t jsmn_parse_string(jsmn_parser *parser,
                 parser->pos = start;
                 return JSMN_ERROR_NOMEM;
             }
-            jsmn_fill_token(token, JSMN_STRING, start+1, parser->pos);
+            jsmn_fill_token(token, type, start+1, parser->pos);
 #ifdef JSMN_PARENT_LINKS
             if (parser->toksuper != -1) {
                 token->parent = parser->toksuper;
@@ -186,6 +186,35 @@ static jsmnerr_t jsmn_parse_string(jsmn_parser *parser,
     }
     parser->pos = start;
     return JSMN_ERROR_PART;
+}
+
+/**
+ * Decide how to handle string. It could be either Binary (base64) or String
+ */
+jsmnerr_t jsmn_handle_string(jsmn_parser *parser,
+                             CFStringInlineBuffer* buf, jsmntok_t *tokens,
+                             size_t num_tokens, CFIndex len, jsmntype_t type) {
+
+    if (type == JSMN_BINARY) {
+        if (CFStringGetCharacterFromInlineBuffer(buf, parser->pos + 1) != '\"') {
+            return JSMN_ERROR_INVAL;
+        }
+
+        parser->pos++;
+    }
+
+    jsmnerr_t r;
+
+#ifdef JSMN_DISABLED_ITEMS
+    r = jsmn_parse_string(parser, buf, tokens, num_tokens, len, type, parser->toksuper >= 0 ? !(tokens[parser->toksuper]._in_comment) : true);
+#else
+    r = jsmn_parse_string(parser, buf, tokens, num_tokens, len, type);
+#endif
+    if (r < 0) return r;
+    if (parser->toksuper != -1)
+        tokens[parser->toksuper].size++;
+
+    return r;
 }
 
 /**
@@ -267,14 +296,10 @@ jsmnerr_t jsmn_parse(jsmn_parser *parser, CFStringInlineBuffer* buf,
 #endif
                 break;
             case '\"':
-#ifdef JSMN_DISABLED_ITEMS
-                r = jsmn_parse_string(parser, buf, tokens, num_tokens, len, parser->toksuper >= 0 ? !(tokens[parser->toksuper]._in_comment) : true);
-#else
-                r = jsmn_parse_string(parser, buf, tokens, num_tokens, len);
-#endif
-                if (r < 0) return r;
-                if (parser->toksuper != -1)
-                    tokens[parser->toksuper].size++;
+                r = jsmn_handle_string(parser, buf, tokens, num_tokens, len, JSMN_STRING);
+                break;
+            case 'b':
+                r = jsmn_handle_string(parser, buf, tokens, num_tokens, len, JSMN_BINARY);
                 break;
             case '\t' : case '\r' : case '\n' : case ':' : case ',': case ' ':
             case 0x0b:

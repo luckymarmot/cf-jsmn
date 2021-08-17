@@ -19,7 +19,8 @@ typedef enum {
     JSMN_PRIMITIVE = 0,
     JSMN_OBJECT = 1,
     JSMN_ARRAY = 2,
-    JSMN_STRING = 3
+    JSMN_STRING = 3,
+    JSMN_BINARY = 4
 } jsmntype_t;
 
 typedef enum {
@@ -75,7 +76,7 @@ void jsmn_init(jsmn_parser *parser);
  * Run JSON parser. It parses a JSON data string into and array of tokens, each describing
  * a single JSON object.
  * @param parser Target parser
- * @param buffer Input string buffer
+ * @param buf Input string buffer
  * @param tokens Tokens buffer
  * @param num_tokens Number of tokens allowed in the buffer
  * @return Error number, JSMN_SUCCESS for success

@@ -210,9 +210,14 @@ jsmnerr_t jsmn_handle_string(jsmn_parser *parser,
 #else
     r = jsmn_parse_string(parser, buf, tokens, num_tokens, len, type);
 #endif
-    if (r < 0) return r;
-    if (parser->toksuper != -1)
-        tokens[parser->toksuper].size++;
+    if (r < 0) {
+        return r;
+    }
+#ifdef JSMN_PARENT_LINKS
+    if (parser->toksuper != -1) {
+      tokens[parser->toksuper].size++;
+    }
+#endif
 
     return r;
 }
